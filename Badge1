@@ -1,0 +1,63 @@
+# File Format
+
+Snowflake File format is a named database object that can be used to simplify the process of accessing the staged data and Streamlines loading data into and unloading data out of database tables.
+
+**CSV** (Comma-Separated Values): A structured format commonly used for tabular data.
+
+**JSON** (JavaScript Object Notation): A semi-structured format that represents data as key-value pairs.
+
+**AVRO**: A compact binary format that supports schema evolution.
+
+**ORC** (Optimized Row Columnar): A columnar storage format optimized for performance.
+
+**PARQUET**: Another columnar storage format that balances compression and query performance.
+
+**XML**: A format for representing hierarchical data.
+
+learn more about from Snowflake documentation [File Formats](https://docs.snowflake.com/en/sql-reference/sql/create-file-format)
+
+```SQL
+create file format garden_plants.veggies.PIPECOLSEP_ONEHEADROW 
+    TYPE = 'CSV'--csv is used for any flat file (tsv, pipe-separated, etc)
+    FIELD_DELIMITER = '|' --pipes as column separators
+    SKIP_HEADER = 1 --one header row to skip
+    ;
+
+create file format garden_plants.veggies.COMMASEP_DBLQUOT_ONEHEADROW 
+    TYPE = 'CSV'--csv for comma separated files
+    SKIP_HEADER = 1 --one header row  
+    FIELD_OPTIONALLY_ENCLOSED_BY = '"' --this means that some values will be wrapped in double-quotes bc they have commas in them
+    ;
+```
+
+# Stages
+**Snowflake stages** are named storage locations in Snowflake where you can temporarily load or unload data files before transferring them to Snowflake tables. Think of a Snowflake stage as a pointer or reference to a data file or set of data files. Here are some key points about Snowflake stages:
+
+1. **Internal Stages**:
+   - Internal stages store data files **internally within Snowflake**. They can be either permanent or temporary.
+   - These stages are useful for loading data from local files into Snowflake tables.
+   - You can create an internal stage using the `CREATE STAGE` command.
+   - Directory tables can be associated with internal stages to catalog staged files in cloud storage.
+   - Types:
+        - User Stage
+        - Table Stage
+        - Named Stage
+
+2. **External Stages**:
+   - External stages reference data files stored **outside of Snowflake**.
+   - Supported cloud storage services for external stages include:
+     - Amazon S3 buckets
+     - Google Cloud Storage buckets
+     - Microsoft Azure containers
+   - The storage location can be private/protected or public.
+   - You cannot access data held in archival cloud storage classes that require restoration before retrieval.
+   - Similar to internal stages, you can create an external stage using the `CREATE STAGE` command.
+
+Remember that Snowflake stages play a crucial role in efficiently moving data between different storage locations and Snowflake tables! 😊🔍
+
+
+Source: Conversation with Bing, 4/28/2024
+(1) Snowflake Stages 101—A Comprehensive Guide for Data Loading & Unloading .... https://www.chaosgenius.io/blog/snowflake-stages-guide/.
+(2) CREATE STAGE | Snowflake Documentation. https://docs.snowflake.com/en/sql-reference/sql/create-stage.
+(3) What Are Snowflake Stages? | phData. https://www.phdata.io/blog/what-are-snowflake-stages/.
+(4) Types of Snowflake Stages: Data Loading and Unloading Features. https://thinketl.com/types-of-snowflake-stages-data-loading-and-unloading-features/.
